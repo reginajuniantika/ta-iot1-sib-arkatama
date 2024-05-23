@@ -1,5 +1,5 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    DASHBOARD
+    SENSOR
 @endsection
