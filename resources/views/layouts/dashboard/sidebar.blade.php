@@ -14,24 +14,39 @@
     <div id="sidebar-scrollbar">
         <nav class="iq-sidebar-menu">
             <ul id="iq-sidebar-toggle" class="iq-menu">
-                <li>
-                    <a href="dashboard" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></a>
+                <li class="
+                @if (request()->url() == route('dashboard'))
+                    active
+                @endif
+                ">
+                    <a href="{{ route('dashboard') }}" class="iq-waves-effect"><i class="ri-home-4-line"></i><span>Dashboard</span></a>
                 </li>
 
-                <li>
+                <li class="
+                @if (request()->url() == '#')
+                    active
+                @endif
+                ">
                     <a href="sensor" class="iq-waves-effect"><i class="ri-temp-cold-line"></i><span>Sensor</span></a>
                 </li>
 
-                <li>
+                <li class="
+                @if (request()->url() == '#')
+                    active
+                @endif
+                ">
                     <a href="ledcontrol" class="iq-waves-effect"><i class="ri-lightbulb-line"></i><span>LED
                             Control</span></a>
                 </li>
 
-                <li>
-                    <a href="pengguna" class="iq-waves-effect"><i
+                <li class="
+                @if (request()->url() == route('users.index'))
+                    active
+                @endif
+                ">
+                    <a href="{{ route('users.index') }}" class="iq-waves-effect"><i
                             class="ri-user-2-line"></i><span>Pengguna</span></a>
                 </li>
-
             </ul>
         </nav>
         <div class="p-3"></div>
