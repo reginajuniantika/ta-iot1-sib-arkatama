@@ -1,6 +1,5 @@
 <div class="iq-sidebar">
     <div class="iq-sidebar-logo d-flex justify-content-between">
-        <a href="index.html">
             <img src="images/ecoalert.png" alt="ecoalert" width="150" height="500">
         </a>
         <div class="iq-menu-bt align-self-center">

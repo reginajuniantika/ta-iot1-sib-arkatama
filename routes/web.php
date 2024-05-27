@@ -9,9 +9,9 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    $data['title'] = 'dashboard';
+    $data['title'] = 'Dashboard';
         $data['breadcrumbs'][]= [
-            'title' => 'dashboard',
+            'title' => 'Dashboard',
             'url' => route('dashboard')
         ];
     return view('pages.dashboard', $data);
