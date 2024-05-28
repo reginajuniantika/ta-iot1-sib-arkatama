@@ -8,6 +8,8 @@
                 <div class="sign-in-from">
                     <h1 class="mb-0">Sign Up</h1>
 
+                    @include('layouts.dashboard.alert.danger-alert')
+
                     <form class="mt-4" action="{{ route('register') }}" method="POST">
                         @csrf
                         <div class="form-group">
@@ -24,7 +26,7 @@
                         </div>
                         <div class="form-group">
                             <label for="password_confirmation">Password Confirmation</label>
-                            <input name="password_confirmation" type="password" class="form-control mb-0" id="password_confirmation" placeholder="Password">
+                            <input name="password_confirmation" type="password" class="form-control mb-0" id="password_confirmation" placeholder="password_confirmation">
                         </div>
                         <div class="d-inline-block w-100">
                             <div class="custom-control custom-checkbox d-inline-block mt-2 pt-1">

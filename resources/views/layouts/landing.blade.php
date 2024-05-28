@@ -54,7 +54,9 @@
         <!-- <a class="navbar-brand logo-text page-scroll" href="index.html">Evolo</a> -->
 
         <!-- Image Logo -->
-        <a class="navbar-brand logo-image"><img src="images/logo iot.png"  width="500" height="500" alt="alternative"></a>
+        <div class="sidebar-brand-icon">
+            <img src="{{ asset('images/logo-iot.png') }}" alt="Logo" width="150" height="150">
+        </div>
 
         <!-- Mobile Menu Toggle Button -->
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
@@ -96,7 +98,6 @@
     </nav> <!-- end of navbar -->
     <!-- end of navigation -->
 
-
     <!-- Header -->
     <header id="header" class="header">
         <div class="header-content">
@@ -104,7 +105,6 @@
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="text-container">
-                            <h1><span class="turquoise">Hello!!!</span></h1>
                             <h1><span class="turquoise">Welcome to</span> EcoAlert </h1>
                             <p>Sistem Pemantauan Lingkungan Berbasis IoT dengan Notifikasi dan Kontrol Jarak Jauh</p>
                             <a class="btn-solid-lg page-scroll" href="{{ route('login') }}">LOGIN</a>

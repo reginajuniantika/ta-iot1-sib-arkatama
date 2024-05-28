@@ -49,11 +49,11 @@
                             <div class="item">
                                 <img src="images/login/1.png" class="img-fluid mb-4" alt="logo">
                                 <h4 class="mb-1 text-white">EcoAlert</h4>
-                            <p>Sistem Pemantauan Lingkungan Berbasis IoT dengan Notifikasi dan Kontrol Jarak Jauh</p>
+                                <p>Sistem Pemantauan Lingkungan Berbasis IoT dengan Notifikasi dan Kontrol Jarak Jauh</p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
 @endsection
