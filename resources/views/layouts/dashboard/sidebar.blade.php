@@ -1,6 +1,9 @@
 <div class="iq-sidebar">
     <div class="iq-sidebar-logo d-flex justify-content-between">
-            <img src="images/ecoalert.png" alt="ecoalert" width="150" height="500">
+        <div class="sidebar-brand-icon">
+            <img src="{{ asset('images/logo-iot.png') }}" alt="Logo" width="150" height="150">
+        </div>
+
         </a>
         <div class="iq-menu-bt align-self-center">
             <div class="wrapper-menu">
@@ -22,7 +25,7 @@
                 </li>
 
                 <li class="
-                @if (request()->url() == '#')
+                @if (request()->url() == 'sensor')
                     active
                 @endif
                 ">
@@ -30,12 +33,11 @@
                 </li>
 
                 <li class="
-                @if (request()->url() == '#')
+                @if (request()->url() == 'ledcontrol')
                     active
                 @endif
                 ">
-                    <a href="ledcontrol" class="iq-waves-effect"><i class="ri-lightbulb-line"></i><span>LED
-                            Control</span></a>
+                    <a href="ledcontrol" class="iq-waves-effect"><i class="ri-lightbulb-line"></i><span>LED Control</span></a>
                 </li>
 
                 <li class="

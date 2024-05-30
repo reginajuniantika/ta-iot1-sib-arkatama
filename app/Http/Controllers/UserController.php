@@ -18,10 +18,10 @@ class UserController extends Controller
             'title' => 'pengguna',
             'url' => 'users.index'
         ];
-
         $users = User::orderBy('name')->get();
         $data['users'] = $users
         ;
         return view('pages.user.index', $data);
     }
+
 }

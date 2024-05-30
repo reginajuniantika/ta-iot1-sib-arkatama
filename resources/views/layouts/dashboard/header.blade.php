@@ -2,10 +2,6 @@
     <div class="iq-navbar-custom">
         <div class="iq-sidebar-logo">
             <div class="top-logo">
-                <a class="logo">
-                    <img src="images/ecoalert.png" alt="ecoalert" width="150" height="500">
-                    <span>EcoAlert</span>
-                </a>
             </div>
         </div>
         @isset($breadcrumbs)

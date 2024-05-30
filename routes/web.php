@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SensorController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,17 +18,36 @@ Route::get('/dashboard', function () {
     return view('pages.dashboard', $data);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-//Route::get('/sensor', function () {
-  //  return view('pages.sensor');
-//})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/sensor', function () {
+    $data['title'] = 'Sensor';
+    $data['breadcrumbs'][]= [
+        'title' => 'dashboard',
+        'url' => route('dashboard')
+    ];
+    $data['title'] = 'Sensor';
+    $data['breadcrumbs'][]= [
+        'title' => 'Sensor',
+        'url' => 'sensor'
+    ];
+    return view('pages.user.sensor', $data);
+});
 
-//Route::get('/ledcontrol', function () {
-  //  return view('pages.ledcontrol');
-//})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/ledcontrol', function () {
+    $data['title'] = 'Led Control';
+        $data['breadcrumbs'][]= [
+            'title' => 'dashboard',
+            'url' => route('dashboard')
+        ];
+        $data['title'] = 'Led Control';
+        $data['breadcrumbs'][]= [
+            'title' => 'Led Control',
+            'url' => 'ledcontrol'
+        ];
+    return view('pages.user.led_control', $data);
+});
 
-//Route::get('/pengguna', function () {
-  //  return view('pages.pengguna');
-//})->middleware(['auth', 'verified'])->name('dashboard');
+
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
