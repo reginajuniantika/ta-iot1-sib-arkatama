@@ -8,15 +8,14 @@ use Illuminate\Http\Request;
 class SensorController extends Controller
 {
     function index(){
-        $data['title'] = 'sensor';
-        $data['breadcrumbs'][]= [
-            'title' => 'dashboard',
+        $data['title'] = 'Sensor';
+        $data['breadcrumbs'][] = [
+            'title' => 'Dashboard',
             'url' => route('dashboard')
-        ];
-        $data['title'] = 'sensor';
-        $data['breadcrumbs'][]= [
+    ];
+        $data['breadcrumbs'][] = [
             'title' => 'sensor',
-            'url' => 'sensor'
+            'url' => route('sensor')
         ];
         return view('pages.user.sensor', $data);
     }

@@ -36,24 +36,24 @@ class UserController extends Controller
                 'required',
                 'min:8'
             ],
-            'password_confirmation' => [
-                'required',
-                'same:password'
-            ],
-            'avatar' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png',
-                'max:2048'
-            ]
+            // 'password_confirmation' => [
+            //     'required',
+            //     'same:password'
+            // ],
+            // 'avatar' => [
+            //     'nullable',
+            //     'image',
+            //     'mimes:jpg,jpeg,png',
+            //     'max:2048'
+            // ]
         ]);
 
         //unggah avatar
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $avatarPath = $avatar->store('avatars', 'public');
-            $validated['avatar'] = $avatarPath;
-        }
+        // if ($request->hasFile('avatar')) {
+        //     $avatar = $request->file('avatar');
+        //     $avatarPath = $avatar->store('avatars', 'public');
+        //     $validated['avatar'] = $avatarPath;
+        // }
 
         //membuat user baru
         $user = User::create($validated);
@@ -87,31 +87,37 @@ class UserController extends Controller
             'email' => [
                 'required',
                 'email',
-                'unique:users,email'
+                'unique:users,email' . $id
             ],
             'password' => [
-                'required',
+                'nullable',
                 'min:8'
             ],
-            'password_confirmation' => [
-                'required',
-                'same:password'
-            ],
-            'avatar' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png',
-                'max:2048'
-            ]
+            // 'password_confirmation' => [
+            //     'required',
+            //     'same:password'
+            // ],
+            // 'avatar' => [
+            //     'nullable',
+            //     'image',
+            //     'mimes:jpg,jpeg,png',
+            //     'max:2048'
+            // ]
         ]);
 
          //unggah avatar
-        if ($request->hasFile('avatar')) {
-            $avatar = $request->file('avatar');
-            $avatarPath = $avatar->store('avatars', 'public');
-            $validated['avatar'] = $avatarPath;
-        }
+        // if ($request->hasFile('avatar')) {
+        //     $avatar = $request->file('avatar');
+        //     $avatarPath = $avatar->store('avatars', 'public');
+        //     $validated['avatar'] = $avatarPath;
+        // }
 
+        //jika ada password baru, maka update password
+        if ($request->filled('password')) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
 
         $user = User::find($id);
         $user->update($validated);

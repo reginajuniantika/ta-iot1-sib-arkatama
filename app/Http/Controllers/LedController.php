@@ -8,17 +8,17 @@ use Illuminate\Http\Request;
 class LedController extends Controller
 {
     function index(){
-        $data['title'] = 'led control';
-        $data['breadcrumbs'][]= [
-            'title' => 'dashboard',
+        $data['title'] = 'LED Control';
+        $data['breadcrumbs'][] = [
+            'title' => 'Dashboard',
             'url' => route('dashboard')
-        ];
-        $data['title'] = 'led control';
-        $data['breadcrumbs'][]= [
-            'title' => 'sensor',
-            'url' => 'ledcontrol'
+    ];
+        $data['breadcrumbs'][] = [
+            'title' => 'LED Control',
+            'url' => route('ledcontrol')
         ];
         return view('pages.user.led_control', $data);
     }
+
 
 }

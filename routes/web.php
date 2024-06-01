@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LedController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SensorController;
 use App\Http\Controllers\UserController;
@@ -18,34 +19,14 @@ Route::get('/dashboard', function () {
     return view('pages.dashboard', $data);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/sensor', function () {
-    $data['title'] = 'Sensor';
-    $data['breadcrumbs'][]= [
-        'title' => 'dashboard',
-        'url' => route('dashboard')
-    ];
-    $data['title'] = 'Sensor';
-    $data['breadcrumbs'][]= [
-        'title' => 'Sensor',
-        'url' => 'sensor'
-    ];
-    return view('pages.user.sensor', $data);
-});
 
-Route::get('/ledcontrol', function () {
-    $data['title'] = 'Led Control';
-        $data['breadcrumbs'][]= [
-            'title' => 'dashboard',
-            'url' => route('dashboard')
-        ];
-        $data['title'] = 'Led Control';
-        $data['breadcrumbs'][]= [
-            'title' => 'Led Control',
-            'url' => 'ledcontrol'
-        ];
-    return view('pages.user.led_control', $data);
-});
+Route::get('/ledcontrol', [LedController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('ledcontrol');
 
+    Route::get('/sensor', [SensorController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('sensor');
 
 
 
@@ -56,6 +37,7 @@ Route::middleware('auth')->group(function () {
 
     //users
     Route::get('users', [UserController::class, 'index'])->name('users.index');
+
 });
 
 require __DIR__.'/auth.php';

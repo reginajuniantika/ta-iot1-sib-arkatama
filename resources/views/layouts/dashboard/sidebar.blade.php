@@ -25,19 +25,19 @@
                 </li>
 
                 <li class="
-                @if (request()->url() == 'sensor')
+                @if (request()->url() == route('sensor'))
                     active
                 @endif
                 ">
-                    <a href="sensor" class="iq-waves-effect"><i class="ri-temp-cold-line"></i><span>Sensor</span></a>
+                    <a href="{{ route('sensor') }}" class="iq-waves-effect"><i class="ri-temp-cold-line"></i><span>Sensor</span></a>
                 </li>
 
                 <li class="
-                @if (request()->url() == 'ledcontrol')
+                @if (request()->url() == route('ledcontrol'))
                     active
                 @endif
                 ">
-                    <a href="ledcontrol" class="iq-waves-effect"><i class="ri-lightbulb-line"></i><span>LED Control</span></a>
+                    <a href="{{ route('ledcontrol') }}" class="iq-waves-effect"><i class="ri-lightbulb-line"></i><span>LED Control</span></a>
                 </li>
 
                 <li class="

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\MqSensorController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,20 @@ Route::get('/user', function (Request $request) {
 //Route::put('/users/{id}', [UserController::class, 'update']);
 //Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
-// resource route
-Route::resource('users', UserController::class)
+//route group name api
+Route::group(['as' =>'api.'], function (){
+
+    // resource route
+    Route::resource('users', UserController::class)
     ->except(['create', 'edit']);
+
+    Route::resource('sensor/mq', MqSensorController::class)
+    ->names('sensors.mq');
+
+});
+
+
+
+
+
+
