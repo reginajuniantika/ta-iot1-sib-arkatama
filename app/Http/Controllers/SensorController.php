@@ -2,22 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Device;
 use Illuminate\Http\Request;
 
 class SensorController extends Controller
 {
-    function index(){
+    public function index()
+    {
         $data['title'] = 'Sensor';
         $data['breadcrumbs'][] = [
             'title' => 'Dashboard',
             'url' => route('dashboard')
-    ];
+        ];
         $data['breadcrumbs'][] = [
-            'title' => 'sensor',
+            'title' => 'Sensor',
             'url' => route('sensor')
         ];
+
+        $devices = Device::all();
+        $data['devices'] = $devices;
+
         return view('pages.user.sensor', $data);
     }
-
 }

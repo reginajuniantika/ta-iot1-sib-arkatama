@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     function index(){
-        $data['title'] = 'pengguna';
+        $data['title'] = 'Pengguna';
         $data['breadcrumbs'][]= [
             'title' => 'dashboard',
             'url' => route('dashboard')

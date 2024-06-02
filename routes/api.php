@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\MqSensorController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -26,7 +27,18 @@ Route::group(['as' =>'api.'], function (){
     Route::resource('sensor/mq', MqSensorController::class)
     ->names('sensors.mq');
 
+    Route::resource('devices', DeviceController::class)
+    ->names('devices');
+
+
 });
+
+//device
+// Route::get('/devices', [DeviceController::class, 'index']);
+// Route::post('/devices', [DeviceController::class, 'store']);
+// Route::get('/devices/{id}', [DeviceController::class, 'show']);
+// Route::put('/devices/{id}', [DeviceController::class, 'update']);
+// Route::delete('/devices/{id}', [DeviceController::class, 'destroy']);
 
 
 

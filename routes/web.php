@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SensorController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\DeviceController;
 
 Route::get('/', function () {
     return view('layouts.landing');
@@ -24,7 +25,7 @@ Route::get('/ledcontrol', [LedController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('ledcontrol');
 
-    Route::get('/sensor', [SensorController::class, 'index'])
+Route::get('/sensor', [SensorController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('sensor');
 
@@ -37,6 +38,10 @@ Route::middleware('auth')->group(function () {
 
     //users
     Route::get('users', [UserController::class, 'index'])->name('users.index');
+
+    //device
+    Route::get('/sensor', [SensorController::class, 'index'])->name('sensor');
+    Route::resource('devices', DeviceController::class);
 
 });
 

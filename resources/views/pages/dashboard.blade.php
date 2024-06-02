@@ -2,12 +2,11 @@
 
 @section('content')
     <div class="row">
-        <div class="col-sm-12 col-md-7">
 
+        <div class="col-sm-12 col-md-7">
             <div class="card iq-mb-3">
                 <div class="card-body">
                     <h4 class="card-title">Monitoring Temperature</h4>
-                    <p class="card-text">Grafik berikut adalah monitoring temperature</p>
 
                     <div id="monitoringGas"></div>
 
@@ -19,10 +18,21 @@
         <div class="col-sm-12 col-md-5">
             <div class="card iq-mb-3">
                 <div class="card-body">
-                    <h4 class="card-title">Monitoring Sensor Gas</h4>
-                    <p class="card-text">Grafik berikut adalah monitoring sensor gas 3 menit terakhir.</p>
+                    <h4 class="card-title">Monitoring Gas</h4>
 
                     <div id="gaugeGas"></div>
+
+                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-7">
+            <div class="card iq-mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">Monitoring Humidity</h4>
+
+                    <div id="monitoringHumidity"></div>
 
                     <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
                 </div>
@@ -41,7 +51,7 @@
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
     <script>
-        let chartGas, gaugeGas;
+        let chartGas, gaugeGas, monitoringhumidity;
         const updateInterval = 1000; // 1 detik
 
 
@@ -75,6 +85,36 @@
             }
         }
 
+        async function requestMonitoringHumidity() {
+            // load data
+            const result = await fetch("{{ route('api.sensors.mq.index') }}");
+
+            if (result.ok) {
+                // cek jika berhasil
+                const data = await result.json();
+                const sensorData = data.data;
+
+                // parse data
+                const date = sensorData[0].created_at;
+                const value = sensorData[0].value;
+
+                // membuat point
+                const point = [new Date(date).getTime(), Number(value)];
+
+                // menambahkan point ke chart
+                const series = monitoringhumidity.series[0],
+                    shift = series.data.length > 20;
+                // shift if the series is
+                // longer than 20
+
+                // add the point
+                monitoringhumidity.series[0].addPoint(point, true, shift);
+
+                // refresh data setiap x detik
+                setTimeout(requestMonitoringHumidity, updateInterval); //1000ms = 1 detik
+            }
+        }
+
         async function requesGaugeGas() {
             // load data
             const result = await fetch("{{ route('api.sensors.mq.index') }}");
@@ -96,6 +136,7 @@
                 setTimeout(requesGaugeGas, updateInterval); //1000ms = 1 detik
             }
         }
+
 
         window.addEventListener('load', function() {
             chartGas = new Highcharts.Chart({
@@ -123,7 +164,37 @@
                     }
                 },
                 series: [{
-                    name: 'Sensor Gas',
+                    name: 'Temperature',
+                    data: []
+                }]
+            });
+
+            monitoringhumidity = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'monitoringHumidity',
+                    defaultSeriesType: 'spline',
+                    events: {
+                        load: requestMonitoringHumidity
+                    }
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150,
+                    maxZoom: 20 * 1000
+                },
+                yAxis: {
+                    minPadding: 0.2,
+                    maxPadding: 0.2,
+                    title: {
+                        text: 'Value',
+                        margin: 80
+                    }
+                },
+                series: [{
+                    name: 'Humidity',
                     data: []
                 }]
             });
@@ -227,5 +298,6 @@
             });
 
         });
+
     </script>
 @endpush
