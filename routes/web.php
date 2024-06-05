@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\DataSensorcontroller;
 use App\Http\Controllers\LedController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SensorController;
@@ -38,10 +39,12 @@ Route::middleware('auth')->group(function () {
 
     //users
     Route::get('users', [UserController::class, 'index'])->name('users.index');
+    Route::post('users/destroy/{id}', [App\Http\Controllers\Api\UserController::class, 'destroy'])->name('users.destroy');
 
     //device
     Route::get('/sensor', [SensorController::class, 'index'])->name('sensor');
     Route::resource('devices', DeviceController::class);
+    Route::get('/sensor/{id}', [DataSensorController::class, 'web_show']);
 
 });
 

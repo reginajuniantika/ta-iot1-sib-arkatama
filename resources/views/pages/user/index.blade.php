@@ -1,4 +1,8 @@
 @extends('layouts.dashboard')
+<head>
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+</head>
 
 @section('content')
     <div class="iq-card">
@@ -34,7 +38,7 @@
                                             data-placement="top" title="" data-original-title="Edit" href="#">
                                             <i class="ri-pencil-line"></i></a>
 
-                                        <a data-toggle="tooltip" data-placement="top" title=""
+                                        <a onclick="openDeleteModal('{{ $user->id }}')" data-toggle="tooltip" data-placement="top" title=""
                                             data-original-title="Delete" href="#"><i
                                                 class="ri-delete-bin-line"></i></a>
                                     </div>
@@ -113,6 +117,27 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     <button type="button" class="btn btn-primary" onclick="editUser()">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal Hapus --}}
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Hapus Pengguna</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Yakin Ingin Menghapus Pengguna?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" onclick="deleteUser()">Simpan</button>
                 </div>
             </div>
         </div>
@@ -247,7 +272,31 @@
         }
 
         function deleteUser() {
+            let token = $('meta[name="csrf-token"]').attr('content');
+            let url = "{{ route('users.destroy', ':userId') }}";
+            url = url.replace(':userId', userId);
 
+            let data = {
+                _token : token
+            };
+
+            $.post(url, data)
+                .done((response) => {
+                    // tampilkan pesan sukses
+                    toastr.success(response.message, 'Sukses')
+
+                    // reload halaman setelah 3 detik
+                    setTimeout(() => {
+                        location.reload()
+                    }, 3000);
+                })
+                .fail((error) => {
+                    // ambil response error
+                    let response = error.responseJSON
+
+                    // tampilkan pesan error
+                    toastr.error(response.message, 'Error')
+                })
         }
 
         function openEditModal(id) {
@@ -267,6 +316,27 @@
 
                     // tampilkan modal editModal
                     $('#editModal').modal('show');
+                })
+                .fail((error) => {
+                    // tampilkan pesan error
+                    toastr.error('Gagal mengambil data user', 'Error')
+                })
+
+        }
+
+        function openDeleteModal(id) {
+            // mengisi variabel userId dengan id yang dikirim dari tombol edit
+            userId = id;
+
+            // ambil data user dari server
+            let url = `{{ route('api.users.show', ':userId') }}`;
+            url = url.replace(':userId', userId);
+
+            // ambil data user
+            $.get(url)
+                .done((response) => {
+                    // tampilkan modal editModal
+                    $('#deleteModal').modal('show');
                 })
                 .fail((error) => {
                     // tampilkan pesan error
