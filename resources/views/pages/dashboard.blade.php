@@ -39,6 +39,18 @@
             </div>
         </div>
 
+        <div class="col-sm-12 col-md-7">
+            <div class="card iq-mb-3">
+                <div class="card-body">
+                    <h4 class="card-title">Monitoring Hujan</h4>
+
+                    <div id="monitoringHujan"></div>
+
+                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 @endsection
@@ -51,7 +63,7 @@
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
     <script>
-        let chartGas, gaugeGas, monitoringhumidity;
+        let chartGas, gaugeGas, monitoringhumidity, monitoringhujan;
         const updateInterval = 1000; // 1 detik
 
 
@@ -112,6 +124,36 @@
 
                 // refresh data setiap x detik
                 setTimeout(requestMonitoringHumidity, updateInterval); //1000ms = 1 detik
+            }
+        }
+
+        async function requestMonitoringHujan() {
+            // load data
+            const result = await fetch("{{ route('api.sensors.mq.index') }}");
+
+            if (result.ok) {
+                // cek jika berhasil
+                const data = await result.json();
+                const sensorData = data.data;
+
+                // parse data
+                const date = sensorData[0].created_at;
+                const value = sensorData[0].value;
+
+                // membuat point
+                const point = [new Date(date).getTime(), Number(value)];
+
+                // menambahkan point ke chart
+                const series = monitoringhujan.series[0],
+                    shift = series.data.length > 20;
+                // shift if the series is
+                // longer than 20
+
+                // add the point
+                monitoringhujan.series[0].addPoint(point, true, shift);
+
+                // refresh data setiap x detik
+                setTimeout(requestMonitoringHujan, updateInterval); //1000ms = 1 detik
             }
         }
 
@@ -195,6 +237,36 @@
                 },
                 series: [{
                     name: 'Humidity',
+                    data: []
+                }]
+            });
+
+            monitoringhujan = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'monitoringHujan',
+                    defaultSeriesType: 'spline',
+                    events: {
+                        load: requestMonitoringHujan
+                    }
+                },
+                title: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150,
+                    maxZoom: 20 * 1000
+                },
+                yAxis: {
+                    minPadding: 0.2,
+                    maxPadding: 0.2,
+                    title: {
+                        text: 'Value',
+                        margin: 80
+                    }
+                },
+                series: [{
+                    name: 'Sensor Hujan',
                     data: []
                 }]
             });
