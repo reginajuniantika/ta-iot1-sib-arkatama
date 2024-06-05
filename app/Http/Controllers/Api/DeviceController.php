@@ -20,8 +20,9 @@ class DeviceController extends Controller
         $device->current_value = $request->current_value;
         $device->save();
         return response()->json([
-            "message" => "Device telah Ditambahkan."
+            "message" => "Device telah ditambahkan."
         ], 201);
+
     }
 
     public function show(string $id)
@@ -36,14 +37,9 @@ class DeviceController extends Controller
             $device->device_name = is_null($request->device_name) ? $device->device_name : $request->device_name;
             $device->current_value = is_null($request->current_value) ? $device->current_value : $request->current_value;
             $device->save();
-            return response()->json([
-                "message" => "Device telah diupdate."
-            ], 201);
-
-           } else {
-            return response()->json([
-                "message" => "Device tidak ditemukan."
-           ], 404);
+            return redirect()->route('sensor')->with('success', 'Device telah Diupdate.');
+        } else {
+            return redirect()->route('sensor')->with('errors', 'Device gagal Diupdate.');
         }
     }
 
@@ -52,22 +48,15 @@ class DeviceController extends Controller
         if (Device::where('id', $id)->exists()) {
             $device = Device::find($id);
             $device->delete();
-            return response()->json([
-                "message" => "Device telah dihapus."
-            ], 201);
-
-            } else {
-            return response()->json([
-                "message" => "Device tidak ditemukan."
-            ], 404);
-            }
+            return redirect()->route('sensor')->with('success', 'Device telah Dihapus.');
         }
-
-        public function web_index(){
-            return view('pages.sensor', [
-                "title"=> "devices",
-                "devices" => Device::all()
-            ]);
-    }
     }
 
+    public function web_index()
+    {
+        return view('pages.sensor', [
+            "title" => "devices",
+            "devices" => Device::all()
+]);
+}
+}
