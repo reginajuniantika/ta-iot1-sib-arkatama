@@ -1,196 +1,103 @@
 @extends('layouts.dashboard')
 
 @section('content')
-    <div class="row">
-
-        <div class="col-sm-12 col-md-7">
-            <div class="card iq-mb-3">
-                <div class="card-body">
-                    <h4 class="card-title">Monitoring Temperature</h4>
-
-                    <div id="monitoringGas"></div>
-
-                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-12 col-md-5">
-            <div class="card iq-mb-3">
-                <div class="card-body">
-                    <h4 class="card-title">Monitoring Gas</h4>
-
-                    <div id="gaugeGas"></div>
-
-                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-12 col-md-7">
-            <div class="card iq-mb-3">
-                <div class="card-body">
-                    <h4 class="card-title">Monitoring Humidity</h4>
-
-                    <div id="monitoringHumidity"></div>
-
-                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-12 col-md-7">
-            <div class="card iq-mb-3">
-                <div class="card-body">
-                    <h4 class="card-title">Monitoring Hujan</h4>
-
-                    <div id="monitoringHujan"></div>
-
-                    <p class="card-text"><small class="text-muted">Terakhir diubah 3 menit lalu</small></p>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
+    <div id="temperatureChart" style="width: 100%; height: 400px;"></div>
+    <div id="humidityChart" style="width: 100%; height: 400px;"></div>
+    <div id="gasChart" style="width: 100%; height: 400px;"></div>
+    <div id="rainChart" style="width: 100%; height: 400px;"></div>
 @endsection
 
 @push('scripts')
     <script src="https://code.highcharts.com/highcharts.js"></script>
-    <script src="https://code.highcharts.com/highcharts-more.js"></script>
-    <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/export-data.js"></script>
-    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-
     <script>
-        let chartGas, gaugeGas, monitoringhumidity, monitoringhujan;
-        const updateInterval = 1000; // 1 detik
+        let temperatureChart, humidityChart, gasChart, rainChart;
+        const baseUrl = '{{ url('') }}';
 
+        async function requestData() {
+            let endpoint = `${baseUrl}/api/data`;
+            let params = {
+                limit: 4
+            }; // Membatasi jumlah data untuk testing
 
-        async function requestMonitoringGas() {
-            // load data
-            const result = await fetch("{{ route('api.sensors.mq.index') }}");
+            try {
+                const result = await fetch(`${endpoint}`);
+                if (result.ok) {
+                    const data = await result.json();
+                    console.log('Fetched data:', data); // Debugging: log fetched data
 
-            if (result.ok) {
-                // cek jika berhasil
-                const data = await result.json();
-                const sensorData = data.data;
+                    if (Array.isArray(data)) {
+                        let temperatureData = [],
+                            humidityData = [],
+                            gasData = [],
+                            rainData = [];
 
-                // parse data
-                const date = sensorData[0].created_at;
-                const value = sensorData[0].value;
+                        data.forEach((sensorData) => {
+                            let x = new Date(sensorData.created_at).getTime();
+                            let y = Number(sensorData.data);
+                            console.log(
+                            `Device ID: ${sensorData.device_id}, X: ${x}, Y: ${y}`); // Debugging: log each point
 
-                // membuat point
-                const point = [new Date(date).getTime(), Number(value)];
+                            switch (sensorData.device_id) {
+                                case 12:
+                                    temperatureData.push([x, y]);
+                                    break;
+                                case 13:
+                                    humidityData.push([x, y]);
+                                    break;
+                                case 5:
+                                    gasData.push([x, y]);
+                                    break;
+                                case 11:
+                                    rainData.push([x, y]);
+                                    break;
+                            }
+                        });
 
-                // menambahkan point ke chart
-                const series = chartGas.series[0],
-                    shift = series.data.length > 20;
-                // shift if the series is
-                // longer than 20
+                        console.log('Temperature Data:', temperatureData); // Debugging: log temperature data
+                        console.log('Humidity Data:', humidityData); // Debugging: log humidity data
+                        console.log('Gas Data:', gasData); // Debugging: log gas data
+                        console.log('Rain Data:', rainData); // Debugging: log rain data
 
-                // add the point
-                chartGas.series[0].addPoint(point, true, shift);
-
-                // refresh data setiap x detik
-                setTimeout(requestMonitoringGas, updateInterval); //1000ms = 1 detik
-            }
-        }
-
-        async function requestMonitoringHumidity() {
-            // load data
-            const result = await fetch("{{ route('api.sensors.mq.index') }}");
-
-            if (result.ok) {
-                // cek jika berhasil
-                const data = await result.json();
-                const sensorData = data.data;
-
-                // parse data
-                const date = sensorData[0].created_at;
-                const value = sensorData[0].value;
-
-                // membuat point
-                const point = [new Date(date).getTime(), Number(value)];
-
-                // menambahkan point ke chart
-                const series = monitoringhumidity.series[0],
-                    shift = series.data.length > 20;
-                // shift if the series is
-                // longer than 20
-
-                // add the point
-                monitoringhumidity.series[0].addPoint(point, true, shift);
-
-                // refresh data setiap x detik
-                setTimeout(requestMonitoringHumidity, updateInterval); //1000ms = 1 detik
-            }
-        }
-
-        async function requestMonitoringHujan() {
-            // load data
-            const result = await fetch("{{ route('api.sensors.mq.index') }}");
-
-            if (result.ok) {
-                // cek jika berhasil
-                const data = await result.json();
-                const sensorData = data.data;
-
-                // parse data
-                const date = sensorData[0].created_at;
-                const value = sensorData[0].value;
-
-                // membuat point
-                const point = [new Date(date).getTime(), Number(value)];
-
-                // menambahkan point ke chart
-                const series = monitoringhujan.series[0],
-                    shift = series.data.length > 20;
-                // shift if the series is
-                // longer than 20
-
-                // add the point
-                monitoringhujan.series[0].addPoint(point, true, shift);
-
-                // refresh data setiap x detik
-                setTimeout(requestMonitoringHujan, updateInterval); //1000ms = 1 detik
-            }
-        }
-
-        async function requesGaugeGas() {
-            // load data
-            const result = await fetch("{{ route('api.sensors.mq.index') }}");
-
-            if (result.ok) {
-                // cek jika berhasil
-                const data = await result.json();
-                const sensorData = data.data;
-
-                // parse data
-                const value = sensorData[0].value;
-
-                if (gaugeGas && !gaugeGas.renderer.forExport) {
-                    const point = gaugeGas.series[0].points[0];
-                    point.update(Number(value));
-                }
-
-                // refresh data setiap x detik
-                setTimeout(requesGaugeGas, updateInterval); //1000ms = 1 detik
-            }
-        }
-
-
-        window.addEventListener('load', function() {
-            chartGas = new Highcharts.Chart({
-                chart: {
-                    renderTo: 'monitoringGas',
-                    defaultSeriesType: 'spline',
-                    events: {
-                        load: requestMonitoringGas
+                        // Add data to charts
+                        temperatureData.forEach(point => {
+                            temperatureChart.series[0].addPoint(point, true, temperatureChart.series[0].data
+                                .length > 20);
+                        });
+                        humidityData.forEach(point => {
+                            humidityChart.series[0].addPoint(point, true, humidityChart.series[0].data.length >
+                                20);
+                        });
+                        gasData.forEach(point => {
+                            gasChart.series[0].addPoint(point, true, gasChart.series[0].data.length > 20);
+                        });
+                        rainData.forEach(point => {
+                            rainChart.series[0].addPoint(point, true, rainChart.series[0].data.length > 20);
+                        });
+                    } else {
+                        console.error('API response is not an array');
                     }
+                } else {
+                    console.error('Failed to fetch data from API');
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                // Set timeout to fetch data again after 5 seconds
+                setTimeout(requestData, 5000);
+            }
+        }
+
+        // Inisialisasi grafik setelah requestData dipanggil
+        window.addEventListener('load', function() {
+            requestData();
+
+            temperatureChart = new Highcharts.Chart({
+                chart: {
+                    renderTo: 'temperatureChart',
+                    type: 'spline',
                 },
                 title: {
-                    text: ''
+                    text: 'Temperature'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -201,7 +108,7 @@
                     minPadding: 0.2,
                     maxPadding: 0.2,
                     title: {
-                        text: 'Value',
+                        text: 'Temperature (°C)',
                         margin: 80
                     }
                 },
@@ -211,16 +118,13 @@
                 }]
             });
 
-            monitoringhumidity = new Highcharts.Chart({
+            humidityChart = new Highcharts.Chart({
                 chart: {
-                    renderTo: 'monitoringHumidity',
-                    defaultSeriesType: 'spline',
-                    events: {
-                        load: requestMonitoringHumidity
-                    }
+                    renderTo: 'humidityChart',
+                    type: 'spline',
                 },
                 title: {
-                    text: ''
+                    text: 'Humidity'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -231,7 +135,7 @@
                     minPadding: 0.2,
                     maxPadding: 0.2,
                     title: {
-                        text: 'Value',
+                        text: 'Humidity (%)',
                         margin: 80
                     }
                 },
@@ -241,16 +145,13 @@
                 }]
             });
 
-            monitoringhujan = new Highcharts.Chart({
+            gasChart = new Highcharts.Chart({
                 chart: {
-                    renderTo: 'monitoringHujan',
-                    defaultSeriesType: 'spline',
-                    events: {
-                        load: requestMonitoringHujan
-                    }
+                    renderTo: 'gasChart',
+                    type: 'spline',
                 },
                 title: {
-                    text: ''
+                    text: 'Gas'
                 },
                 xAxis: {
                     type: 'datetime',
@@ -261,115 +162,42 @@
                     minPadding: 0.2,
                     maxPadding: 0.2,
                     title: {
-                        text: 'Value',
+                        text: 'Gas (ppm)',
                         margin: 80
                     }
                 },
                 series: [{
-                    name: 'Sensor Hujan',
+                    name: 'Gas',
                     data: []
                 }]
             });
 
-            gaugeGas = new Highcharts.Chart({
-
+            rainChart = new Highcharts.Chart({
                 chart: {
-                    renderTo: 'gaugeGas',
-                    type: 'gauge',
-                    plotBackgroundColor: null,
-                    plotBackgroundImage: null,
-                    plotBorderWidth: 0,
-                    plotShadow: false,
-                    height: '80%',
-                    events: {
-                        load: requesGaugeGas
-                    }
+                    renderTo: 'rainChart',
+                    type: 'spline',
                 },
-
                 title: {
-                    text: ''
+                    text: 'Rain'
                 },
-
-                pane: {
-                    startAngle: -90,
-                    endAngle: 89.9,
-                    background: null,
-                    center: ['50%', '75%'],
-                    size: '110%'
+                xAxis: {
+                    type: 'datetime',
+                    tickPixelInterval: 150,
+                    maxZoom: 20 * 1000
                 },
-
-                // the value axis
                 yAxis: {
-                    min: 0,
-                    max: 1000,
-                    tickPixelInterval: 72,
-                    tickPosition: 'inside',
-                    tickColor: Highcharts.defaultOptions.chart.backgroundColor || '#FFFFFF',
-                    tickLength: 20,
-                    tickWidth: 2,
-                    minorTickInterval: null,
-                    labels: {
-                        distance: 20,
-                        style: {
-                            fontSize: '14px'
-                        }
-                    },
-                    lineWidth: 0,
-                    plotBands: [{
-                        from: 0,
-                        to: 550,
-                        color: '#55BF3B', // green
-                        thickness: 20,
-                        borderRadius: '50%'
-                    }, {
-                        from: 500,
-                        to: 850,
-                        color: '#DDDF0D', // yellow
-                        thickness: 20,
-                    }, {
-                        from: 800,
-                        to: 1000,
-                        color: '#DF5353', // red
-                        thickness: 20,
-                        borderRadius: '50%'
-                    }, ]
-                },
-
-                series: [{
-                    name: 'Speed',
-                    data: [80],
-                    tooltip: {
-                        valueSuffix: ' gas'
-                    },
-                    dataLabels: {
-                        format: '{y} gas',
-                        borderWidth: 0,
-                        color: (
-                            Highcharts.defaultOptions.title &&
-                            Highcharts.defaultOptions.title.style &&
-                            Highcharts.defaultOptions.title.style.color
-                        ) || '#333333',
-                        style: {
-                            fontSize: '16px'
-                        }
-                    },
-                    dial: {
-                        radius: '80%',
-                        backgroundColor: 'gray',
-                        baseWidth: 12,
-                        baseLength: '0%',
-                        rearLength: '0%'
-                    },
-                    pivot: {
-                        backgroundColor: 'gray',
-                        radius: 6
+                    minPadding: 0.2,
+                    maxPadding: 0.2,
+                    title: {
+                        text: 'Rain (mm)',
+                        margin: 80
                     }
-
+                },
+                series: [{
+                    name: 'Rain',
+                    data: []
                 }]
-
             });
-
         });
-
     </script>
 @endpush

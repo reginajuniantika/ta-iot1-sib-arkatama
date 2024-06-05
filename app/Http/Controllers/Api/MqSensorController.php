@@ -36,12 +36,10 @@ class MqSensorController extends Controller
                 'required',
                 'numeric',
             ]
-
         ]);
 
         $sensorData = MqSensor::create($request->all());
+        return response()->json($sensorData, 201);
 
-        return response()
-        ->json($sensorData, 201);
     }
 }
