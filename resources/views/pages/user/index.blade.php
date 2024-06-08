@@ -1,4 +1,5 @@
 @extends('layouts.dashboard')
+
 <head>
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -21,6 +22,7 @@
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Phone Number</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Join Date</th>
@@ -31,16 +33,23 @@
                         @foreach ($users as $user)
                             <tr>
                                 <td>{{ $user->name }}</td>
+                                <td>
+                                    @if ($user->phone_number == null)
+                                        <span class="badge badge-secondary">Belum diisi</span>
+                                    @else
+                                        {{ $user->phone_number }}
+                                    @endif
+                                </td>
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     @if ($user->role == 'admin')
-                                    <span class="badge badge-primary">
-                                        <i class="ri-user-star-fill"></i>
-                                        Admin</span>
+                                        <span class="badge badge-primary">
+                                            <i class="ri-user-star-fill"></i>
+                                            Admin</span>
                                     @else
-                                    <span class="badge badge-secondary">
-                                        <i class="ri-user-fill"></i>
-                                        User</span>
+                                        <span class="badge badge-secondary">
+                                            <i class="ri-user-fill"></i>
+                                            User</span>
                                     @endif
                                 </td>
                                 <td>{{ $user->created_at->format('d M Y, H:i:s') }}</td>
@@ -50,9 +59,9 @@
                                             data-placement="top" title="" data-original-title="Edit" href="#">
                                             <i class="ri-pencil-line"></i></a>
 
-                                        <a onclick="openDeleteModal('{{ $user->id }}')" data-toggle="tooltip" data-placement="top" title=""
-                                            data-original-title="Delete" href="#"><i
-                                                class="ri-delete-bin-line"></i></a>
+                                        <a onclick="openDeleteModal('{{ $user->id }}')" data-toggle="tooltip"
+                                            data-placement="top" title="" data-original-title="Delete"
+                                            href="#"><i class="ri-delete-bin-line"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -83,6 +92,11 @@
                         <div class="form-group">
                             <label for="addEmail">Email</label>
                             <input required type="email" class="form-control" id="addEmail" name="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="addPhoneNumber">Phone Number</label>
+                            <input required type="text" class="form-control" id="addPhoneNumber" name="phone_number">
                         </div>
 
                         <div class="form-group">
@@ -126,6 +140,11 @@
                         <div class="form-group">
                             <label for="editEmail">Email</label>
                             <input required type="email" class="form-control" id="editEmail" name="email">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editPhoneNumber">Phone Number</label>
+                            <input required type="text" class="form-control" id="editPhoneNumber" name="phone_number">
                         </div>
 
                         <div class="form-group">
@@ -195,6 +214,7 @@
             let data = {
                 name: $('#addName').val(),
                 email: $('#addEmail').val(),
+                phone_number: $('#addPhoneNumber').val(),
                 password: $('#addPassword').val(),
                 role: $('#addRole').val()
             }
@@ -251,6 +271,7 @@
             let data = {
                 name: $('#editName').val(),
                 email: $('#editEmail').val(),
+                phone_number: $('#editPhoneNumber').val(),
                 password: $('#editPassword').val(),
                 role: $('#editRole').val(),
                 _method: 'PUT'
@@ -307,7 +328,7 @@
             url = url.replace(':userId', userId);
 
             let data = {
-                _token : token
+                _token: token
             };
 
             $.post(url, data)
@@ -343,6 +364,7 @@
                     // isi form editModal dengan data user
                     $('#editName').val(response.data.name);
                     $('#editEmail').val(response.data.email);
+                    $('#editPhoneNumber').val(response.data.phone_number);
                     $('#editRole').val(response.data.role);
 
                     // tampilkan modal editModal

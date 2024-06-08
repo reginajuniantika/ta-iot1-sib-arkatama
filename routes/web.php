@@ -5,8 +5,10 @@ use App\Http\Controllers\LedController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SensorController;
 use App\Http\Controllers\UserController;
+use App\Service\WhatsappNotificationService;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DeviceController;
+use App\Service\WhatsaapNotificationService;
 
 Route::get('/', function () {
     return view('layouts.landing');
@@ -46,6 +48,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('devices', DeviceController::class);
     Route::get('/sensor/{id}', [DataSensorController::class, 'web_show']);
 
+    // Route::get('/whatsaap', function () {
+    //     $target = request('target');
+    //     $message = 'ada kebocoran gas dirumah anda, segera cek dan perbaiki';
+    //     $response = WhatsaapNotificationService::sendMessage($target, $message);
+
+    //     echo $response;
+    // });
 });
+
+
 
 require __DIR__.'/auth.php';
