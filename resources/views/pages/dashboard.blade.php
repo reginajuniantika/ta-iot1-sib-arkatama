@@ -38,16 +38,16 @@
                             `Device ID: ${sensorData.device_id}, X: ${x}, Y: ${y}`); // Debugging: log each point
 
                             switch (sensorData.device_id) {
-                                case 12:
+                                case 2:
                                     temperatureData.push([x, y]);
                                     break;
-                                case 13:
+                                case 1:
                                     humidityData.push([x, y]);
                                     break;
-                                case 5:
+                                case 4:
                                     gasData.push([x, y]);
                                     break;
-                                case 11:
+                                case 3:
                                     rainData.push([x, y]);
                                     break;
                             }
