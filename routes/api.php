@@ -34,8 +34,8 @@ Route::group(['as' =>'api.'], function (){
 
 });
 
-Route::get('/data', [DataSensorController::class, 'index']);
-Route::post('/data', [DataSensorController::class, 'store']);
-Route::get('/data/{id}', [DataSensorController::class, 'show']);
+Route::get('/data', [DataSensorcontroller::class, 'index']);
+Route::post('/data', [DataSensorcontroller::class, 'store']);
+Route::get('/data/{id}', [DataSensorcontroller::class, 'show']);
 
 
