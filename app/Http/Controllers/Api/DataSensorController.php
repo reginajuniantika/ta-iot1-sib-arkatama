@@ -54,13 +54,13 @@ class DataSensorController extends Controller
 
     public function web_show(string $id)
     {
-        $device = Data::find($id);
+        $device = Device::find($id);
 
         // Mengambil data sensor dengan paginasi
-        $data = Data::where('device_id', $id)->orderBy('created_at', 'DESC')->simplepaginate(10); // Ganti 10 dengan jumlah data per halaman yang Anda inginkan
+        $data = Data::where('device_id', $id)->orderBy('created_at', 'DESC')->simplePaginate(10); // Ganti 10 dengan jumlah data per halaman yang Anda inginkan
 
         return view('pages.data', [
-            "title" => "device",
+            "title" => "Device Data",
             "device" => $device,
             "data" => $data
         ]);
@@ -68,10 +68,9 @@ class DataSensorController extends Controller
 
     private function sendAlert($gasValue, $deviceId)
     {
-        $message = "Peringatan! Terdeteksi kebocoran gas dengan tingkat bahaya $gasValue pada sensor dengan ID $deviceId";
-        $message .= PHP_EOL;
-        $message .= PHP_EOL;
-        $message .= 'Dikirimkan pada tanggal ' . date('Y-m-d H:i:s') . ' oleh IoT With Capy';
+        $message = "Peringatan! kebocoran gas mencapai TINGKAT BERBAHAYA $gasValue pada perangkat dengan ID $deviceId";
+        $message .= PHP_EOL . PHP_EOL;
+        $message .= 'Dikirimkan pada tanggal ' . date('Y-m-d H:i:s') . ' oleh EcoAlert';
         $this->sendWhatsAppMessage($message);
     }
 
@@ -94,10 +93,10 @@ class DataSensorController extends Controller
             CURLOPT_POSTFIELDS => array(
                 'target' => $phone,
                 'message' => $message,
-                'countryCode' => '62', //optional
+                'countryCode' => '62', // optional
             ),
             CURLOPT_HTTPHEADER => array(
-                'Authorization: ' . $token //change TOKEN to your actual token
+                'Authorization: ' . $token // Ganti TOKEN dengan token yang sebenarnya
             ),
         ));
 
