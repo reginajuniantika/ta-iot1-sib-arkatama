@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\DataSensorcontroller;
+use App\Http\Controllers\Api\DataSensorController;
 use App\Http\Controllers\LedController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SensorController;

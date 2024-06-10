@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\Api\DataSensorcontroller;
+use App\Http\Controllers\Api\DataSensorController;
 use App\Http\Controllers\Api\DeviceController;
 use App\Http\Controllers\Api\MqSensorController;
 use App\Http\Controllers\Api\UserController;
@@ -34,8 +34,8 @@ Route::group(['as' =>'api.'], function (){
 
 });
 
-Route::get('/data', [DataSensorcontroller::class, 'index']);
-Route::post('/data', [DataSensorcontroller::class, 'store']);
-Route::get('/data/{id}', [DataSensorcontroller::class, 'show']);
+Route::get('/data', [DataSensorController::class, 'index']);
+Route::post('/data', [DataSensorController::class, 'store']);
+Route::get('/data/{id}', [DataSensorController::class, 'show']);
 
 

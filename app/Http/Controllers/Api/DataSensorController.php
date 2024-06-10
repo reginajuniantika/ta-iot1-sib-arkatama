@@ -8,7 +8,7 @@ use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
-class DataSensorcontroller extends Controller
+class DataSensorController extends Controller
 {
     public function index()
     {
